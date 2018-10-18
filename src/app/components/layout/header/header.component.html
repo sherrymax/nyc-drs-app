@@ -1,0 +1,15 @@
+<div data-automation-id="header-container" class="dw-header-container" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="dw-apps-logo" fxLayout="row" fxLayoutAlign="start center">
+        <div class="dw-header-left-area">
+            <ng-content></ng-content>
+        </div>
+        <img [src]="getPathLogo()"/>
+        <div id="apw-logo-id" fxHide.xs="true" fxHide.lg="false" fxHide.xl="false" fxHide.md="true" fxHide.sm="true">{{ 'DW-HEADER.APPS-DESKTOP' | translate }}</div>
+        <div fxHide.xs="true" fxHide.lg="true" fxHide.md="false" fxHide.sm="false" fxHide.xl="true">{{ 'DW-HEADER.APPS-TABLETS' | translate }}</div>
+        <div fxHide.xs="false" fxHide.lg="true" fxHide.md="true" fxHide.sm="true" fxHide.xl="true">{{ 'DW-HEADER.APPS-MOBILES' | translate }}</div>
+    </div>
+    <div class="dw-profile-container" fxLayout="row" fxLayoutAlign="end center">
+        <adf-userinfo [namePosition]="'left'" fxHide.xs></adf-userinfo>
+        <apw-user-profile-menu (onMenuClick)="onUserMenuSelect($event)"></apw-user-profile-menu>
+    </div>
+</div>

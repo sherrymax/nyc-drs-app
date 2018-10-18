@@ -1,0 +1,10 @@
+<button mat-icon-button id="dw-menu-button-id" class="dw-profile-menu" [matMenuTriggerFor]="profileMenu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #profileMenu="matMenu">
+    <button mat-menu-item id="dw-menu-logout-id" data-automation-id="sign-out" (click)="menuClick('sign_out')">{{ 'DW-USER-PROFILE.MENU.SIGN-OUT' | translate }}</button>
+    <button mat-menu-item id="dw-langmenu-id" [matMenuTriggerFor]="langMenu">{{ 'DW-USER-PROFILE.MENU.LANGUAGES' | translate }}</button>
+</mat-menu>
+<mat-menu #langMenu="matMenu">
+    <adf-language-menu id="dw-language-menu-id"></adf-language-menu>
+</mat-menu>

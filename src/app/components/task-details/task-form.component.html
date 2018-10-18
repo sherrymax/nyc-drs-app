@@ -1,0 +1,41 @@
+<div *ngIf="isTaskLoaded()">
+    <adf-form *ngIf="hasFormKey()"
+        [taskId]="taskDetails.id"
+        [showRefreshButton]="false"
+        [readOnly]="isReadOnlyForm()"
+        [showSaveButton]="isSaveButtonVisible()"   
+        [showCompleteButton]="isCompleteButtonVisible()"  
+        [showTitle]="false" 
+        (formCompleted)='onFormCompleted($event)'
+        (formContentClicked)='onFormContentClick($event)'
+        (formLoaded)='onFormLoaded($event)'
+        (executeOutcome)='onFormOutcomeExecute($event)'> #activitiForm>
+    </adf-form>
+    <!-- <mat-card class="mat-card"> -->
+        <app-comment></app-comment>
+    <!-- </mat-card> -->
+
+    <mat-card *ngIf="!hasFormKey()" class="dw-message-card">
+        <mat-card-content>
+            <div class="dw-no-form-message-container">
+                <div class="dw-no-form-message-list">
+                    <div id="dw-no-form-id" class="dw-no-form-message" *ngIf="!isCompletedTask(); else completedMessage">{{ 'DW-TASK-FORM.NO-FORM-MESSAGE' | translate }}</div>
+                    <ng-template #completedMessage>
+                        <div id="dw-completed-form-id" class="dw-no-form-message">
+                            <p>{{'DW-TASK-FORM.COMPLETE-TASK-MESSAGE' | translate : getTaskName() }}</p>
+                        </div>
+                        <div class="dw-no-form-submessage">
+                            {{ 'DW-TASK-FORM.COMPLETE-TASK-SUB-MESSAGE' | translate }}
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions *ngIf="!isCompletedTask()" class="apw-no-form-mat-card-actions">
+            <div fxFlex></div>
+            <button mat-button class="dw-task-button-cancel" (click)="onCancelButtonClick()">{{ 'DW-TASK-FORM.BUTTON.CANCEL' | translate }}</button>
+            <button mat-button id="dw-no-form-complete-button" color="primary" (click)="onCompleteTask()" *ngIf="hasCompleteButton()">{{ 'DW-TASK-FORM.BUTTON.COMPLETE' | translate }}</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

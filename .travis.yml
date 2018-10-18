@@ -1,0 +1,36 @@
+language: node_js
+dist: trusty
+sudo: false
+node_js:
+  - "8"
+
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+env:
+  matrix:
+    - MODULE=digital-workspace
+
+install:
+    - if ([ "$MODULE" == "digital-workspace" ]); then
+        if ([ "$TRAVIS_BRANCH" = "master" ]); then
+            (./scripts/start.sh -ss -v latest -vjsapi latest || exit 1;);
+        else
+            (./scripts/start.sh -ss -v alpha -vjsapi alpha || exit 1;);
+        fi
+      fi
+
+script:
+    - if ([ "$MODULE" == "digital-workspace" ]); then
+
+        (npm run test-single-run || exit 1;);
+      fi
+
+# Send coverage data to codecov
+after_success:
+  bash <(curl -s https://codecov.io/bash) -X gcov
+
+cache:
+  directories:
+  - adf-app-manager-ui/node_modules

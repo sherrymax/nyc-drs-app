@@ -1,0 +1,61 @@
+@mixin dw-header-theme($theme) {
+    $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    .dw {
+        &-container {
+           display: flex;
+           flex: 1;
+           flex-direction: column;
+           height: 100%;
+           background: mat-color($background, dialog);
+           @media (max-width: 600px){
+            height: calc(100% - 64px)!important;
+           }
+        }
+
+        &-header-container {
+            width: 100%;
+            height: 64px;
+            background: mat-color($primary);
+        }
+
+        &-header-left-area {
+            margin-right: 10px;
+        }
+
+        &-apps-logo {
+            padding: 17px 10px;
+
+            &>img {
+                height: 30px;
+                padding-right: 5px;
+            }
+
+            &>div {
+                padding: 7px 0px 7px 6px;
+                font-size: 23px;
+                margin-top: 0px;
+                color:  mat-color($background, dialog);
+                opacity: 0.90;
+            }
+        }
+
+        &-profile-container {
+            adf {
+                &-userinfo {
+                    color:  mat-color($background, dialog);
+                    padding-right: 8px;
+                }
+            }
+
+            apw-user-profile-menu {
+                & .mat-icon-button {
+                    padding-right: 18px !important;
+                }
+            }
+        }
+    }
+
+}

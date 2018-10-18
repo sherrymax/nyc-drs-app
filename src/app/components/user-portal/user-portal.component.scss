@@ -1,0 +1,69 @@
+.example-header {
+    min-height: 64px;
+    padding: 8px 24px 0;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-table {
+    overflow: auto;
+    max-height: 100%;
+}
+
+/*HOVER POPUP LINKS*/
+
+/*hoverpopups type 1*/
+
+#popup {
+    color: rgb(127, 206, 36);
+    // background-color: #c71f1f;
+}
+
+#popup a,
+#popup a:visited {
+    position: relative;
+    display: contents;
+    width: 130px;
+    line-height: 30px;
+    text-align: left;
+    padding: 0 10px;
+    margin: 0;
+    border: 1px solid #666;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#popup a div {
+    display: none;
+}
+
+#popup a:hover {
+    background-color: green;
+}
+
+
+#popup a:hover div {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 170px;
+    width: 320px;
+    margin: 0px;
+    padding: 10px;
+    color: #335500;
+    font-weight: normal;
+    background: rgb(17, 202, 226);
+    text-align: left;
+    border: 1px solid #666;
+}
+
+.dashboard_label{
+    font-weight: bolder;
+    padding-left: 45%;
+    /* margin-top: 20%; */
+    font-size: 23px;
+}

@@ -1,0 +1,23 @@
+<adf-sidenav-layout #adfsidenavlayout [sidenavMin]="0" [sidenavMax]="0" [stepOver]="0" [hideSidenav]="true" [expandedSidenav]="false">
+    <adf-sidenav-layout-header>
+        <ng-template let-toggleMenu="toggleMenu">
+            <apw-header class="mat-elevation-z6">
+                <button mat-icon-button (click)="toggleMenu()" class="dw-activiti-app-menu-toggle">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </apw-header>
+        </ng-template>
+    </adf-sidenav-layout-header>
+
+    <adf-sidenav-layout-navigation>
+        <ng-template let-toggleMenu="toggleMenu" let-isMenuMinimized="isMenuMinimized">
+            <apw-side-menu [expanded]="!isMenuMinimized()" (minimizeSidenav)="minimizeSidenav()"></apw-side-menu>
+        </ng-template>
+    </adf-sidenav-layout-navigation>
+
+    <adf-sidenav-layout-content>
+        <ng-template>
+            <router-outlet></router-outlet>
+        </ng-template>
+    </adf-sidenav-layout-content>
+</adf-sidenav-layout>

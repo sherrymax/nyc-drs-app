@@ -1,0 +1,13 @@
+<!--LOGIN-->
+
+<adf-login #alfrescologin
+                [providers]="providers"
+                [fieldsValidation]="customValidation"
+                [disableCsrf]="disableCsrf"
+                [showLoginActions]="false"
+                [copyrightText]="copyrightText"
+                (executeSubmit)="validateForm($event)"
+                (success)="onLogin($event)"
+                (error)="onError($event)"
+                [logoImageUrl]="'https://static1.squarespace.com/static/571bd12120c6472939a28b47/t/58f9300a440243ba1c06e638/1485988815815/logo-nycdrs.png?format=500w'">
+</adf-login>

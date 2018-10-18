@@ -1,0 +1,12 @@
+<br/>
+<div style="display:flex">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;
+  <button mat-raised-button color="primary">Add Notes</button>
+</div>
+<br/>
+<adf-comment-list
+    [comments]="comments"
+    (clickRow)="onClickCommentRow($event)">
+</adf-comment-list> 

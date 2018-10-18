@@ -1,0 +1,192 @@
+<br/>
+<span class="dashboard_label" style="font-weight: bolder; padding-left: 45%; font-size: 23px;">NYCDRS Dashboard</span>
+
+<mat-card *ngIf="isDataLoading()" style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+</mat-card>
+
+<div class="example-header">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+</div>
+
+<mat-tab-group (selectedTabChange)="tabChanged($event)">
+    <mat-tab label="Inbox">
+        <mat-table #table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-checkbox *ngIf=isTaskOwnedByLoggedUser(row) (click)="selectRow(row)"></mat-checkbox>
+                    <i *ngIf=!isTaskOwnedByLoggedUser(row) class="material-icons">lock</i>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="nycdrsId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> NYCDRS ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.nycdrsId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="labnextId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> LABNEXT ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.labnextId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="scan">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Scan </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.scan}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="externalId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> External ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.externalId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="doctorId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Doctor ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry">
+                    <!-- <ng-template> -->
+                    <div id="popup">
+                        <a href="#" (mouseover)="hoverIn($event.target.innerText)">
+                            {{entry.doctorId}}
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td>{{doctorName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{doctorAddress}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </a>
+                    </div>
+                    <!-- </ng-template> -->
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="patient">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.patient}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="sentDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Sent Date </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.sentDate}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="owner">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Owner </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.owner}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="taskDescription">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Task Description </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.taskDescription}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="group">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Group </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.group}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.status}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="requestedDeliveryDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Requested Delivery Date </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.requestedDeliveryDate}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" [style.background]="highlightedRows.indexOf(row) != -1 ? 'lightblue' : ''"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    </mat-tab>
+    <mat-tab label="Claimed">
+
+
+    </mat-tab>
+
+    <mat-tab label="Open Cases">
+        <mat-table #table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="nycdrsId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> NYCDRS ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.nycdrsId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="labnextId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> LABNEXT ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.labnextId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="scan">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Scan </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.scan}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="externalId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> External ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.externalId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="doctorId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Doctor ID </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.doctorId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="patient">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.patient}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="sentDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Sent Date </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.sentDate}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="owner">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Owner </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.owner}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="taskDescription">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Task Description </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.taskDescription}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="group">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Group </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.group}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.status}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="requestedDeliveryDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Requested Delivery Date </mat-header-cell>
+                <mat-cell *matCellDef="let entry"> {{entry.requestedDeliveryDate}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectRow(row)" [style.background]="highlightedRows.indexOf(row) != -1 ? 'lightblue' : ''"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    </mat-tab>
+
+    <mat-tab label="Closed Cases">
+
+
+    </mat-tab>
+</mat-tab-group>
