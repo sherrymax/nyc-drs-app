@@ -54,25 +54,3 @@ By default the configuration file has the content similar to the following one:
 
 You can change the default APS end point here, by default it takes the ip and port number of the server where the application is hosted. If you are running the activiti instance in a custom context (the default one is activiti-app) you can change it through the property contextRootBpm. For instance in the above example we are using a custom context called 'my-custom-activiti-app' .
 
-## Shell scripts usage
-
-[Shell scripts which are used to clean, run, and test the application](scripts/README.md) 
-
-## Customize APW
-
-Documentation on how to customize APW can be found [here](how-to-customize.md) 
-
-## Access ACS in APW
-
-By default providers is set to "BPM" in `app.config.json`. Change the value to "ALL", in
-order to access both ACS & APS.
-
-```json
-"adf-login": {
-        "copyrightText" : "\u00A9 2018 Alfresco Software, Inc. All Rights Reserved.",
-        "providers": "BPM"
-    }
-```
-1. Same User should be available in both APS & ACS. 
-2. Create Alfresco Repository to the user. [Alfresco Repository](create-alfresco-repository.md)
-In this way, you will be allowed to access to ACS from APW.
