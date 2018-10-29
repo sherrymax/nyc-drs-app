@@ -42,7 +42,6 @@ import { MetadataDialogAdapterComponent } from './components/files/metadata-dial
 import { CustomSourcesComponent } from './components/files/custom-sources.component';
 
 
-
 import {
     AppsContainerComponent,
     AppsComponent,
@@ -165,7 +164,8 @@ import { GlobalVariables } from './components/global-values/globals';
         DialogConfirmationComponent
     ],
     entryComponents: [
-        DialogConfirmationComponent
+        DialogConfirmationComponent,
+        CommentComponent
     ],
     bootstrap: [AppRootComponent]
 })

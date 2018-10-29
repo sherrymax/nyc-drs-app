@@ -151,7 +151,10 @@ export class TaskFromComponent implements OnInit, OnDestroy {
     updateProcessValues(){
         this.processVariables = [];
         let userRole = this.appConfig.get<string>('user-role-to-attach-documents');
-        let userRoleValue = ''+(this.globalValues.loggedInUser.groups.indexOf(userRole) != -1);
+        let userRoleValue = 'false';
+        if(this.globalValues && this.globalValues.loggedInUser && this.globalValues.loggedInUser.groups){
+            userRoleValue = ''+(this.globalValues.loggedInUser.groups.indexOf(userRole) != -1);
+        }
 
         this.processVariables.push({ name: 'userHasPermissionToAttachDocs', value: userRoleValue, type: 'string' });
         console.log('User First Name = ',this.globalValues.loggedInUser.firstName);

@@ -8,9 +8,12 @@ import { ProcessInstanceVariable, ProcessInstance, ProcessService, TaskListServi
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { AppConfigService, BpmUserService } from '@alfresco/adf-core';
+import { AppConfigService, BpmUserService, DataSorting } from '@alfresco/adf-core';
 import { GlobalVariables } from '../global-values/globals';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+
+import { ObjectDataTableAdapter } from '@alfresco/adf-core';
+
 
 @Component({
   selector: 'app-user-portal',
@@ -24,7 +27,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
 export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  displayedColumns = ['select', 'nycdrsId', 'labnextId', 'scan', 'patient', 'externalId', 'doctorId', 'patient', 'sentDate', 'requestedDeliveryDate', 'owner', 'taskDescription', 'status'];
+  displayedColumns = ['select', 'nycdrsId', 'labnextId', 'scan', 'externalId', 'doctorId', 'patient', 'sentDate', 'requestedDeliveryDate', 'owner', 'taskDescription', 'status'];
 
   dataSource: MatTableDataSource<ReferenceDataModel>;
   highlightedRows = [];
@@ -46,6 +49,24 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
   currentTab: string = null;
   currentLoggedInUserName: string = null;
   currentLoggedInUserGroups: string[] = [];
+
+  adfData: ObjectDataTableAdapter;
+  customADFData: ReferenceDataModelAPIResponse[];
+  private defaultSchemaColumn: any[] = [
+    { type: 'text', key: 'id', title: 'ID', sortable: true, sort: 'desc' },
+    { type: 'text', key: 'nycdrsId', title: 'NYCDRS ID', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'labnextId', title: 'Labnext ID', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'scan', title: 'Scan', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'externalId', title: 'External ID', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'doctorId', title: 'Doctor ID', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'patient', title: 'Patient', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'sentDate', title: 'Sent Date', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'requestedDeliveryDate', title: 'Delivery Date', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'owner', title: 'Owner', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'taskDescription', title: 'Task Description', sortable: true, cssClass: 'desktop-only' },
+    { type: 'text', key: 'status', title: 'Status', sortable: true, cssClass: 'desktop-only' }
+    // { type: 'image', key: 'icon', title: 'Watch-eye', sortable: false, cssClass: 'desktop-only' }
+  ];
 
   constructor(private referenceDataService: ReferenceDataService, private route: ActivatedRoute, private router: Router,
     private appConfig: AppConfigService,
@@ -108,13 +129,25 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
       }
       case 'Claimed': this.buildDashboardTable('nycdrs-claimed'); break;
       case 'Open Cases': {
-        this.displayedColumns = ['nycdrsId', 'labnextId', 'scan', 'externalId', 'doctorId', 'patient', 'sentDate', 'requestedDeliveryDate', 'owner', 'taskDescription', 'group', 'status'];
-        this.buildDashboardTable('nycdrs-open-cases');
-        this.currentTab = 'nycdrs-open-cases';
+        // this.displayedColumns = ['nycdrsId', 'labnextId', 'scan', 'externalId', 'doctorId', 'patient', 'sentDate', 'requestedDeliveryDate', 'owner', 'taskDescription', 'group', 'status'];
+        this.buildDashboardTable('nycdrs-inbox');
+        this.currentTab = 'nycdrs-inbox';
         break;
       }
       case 'Closed Cases': this.buildDashboardTable('nycdrs-closed-cases'); break;
     }
+  }
+
+  initDefaultSchemaColumns(responseData): ObjectDataTableAdapter {
+    return new ObjectDataTableAdapter(
+      responseData,
+      this.defaultSchemaColumn
+    );
+  }
+
+  onProcessRowSelect($event){
+    console.dir($event);
+    this.selectRow($event.value.obj);
   }
 
   buildDashboardTable(tableName) {
@@ -126,6 +159,19 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
           this.loading = false;
           this.dataSource = new MatTableDataSource(res);
           this.ngAfterViewInit();
+
+          // this.adfData = new ObjectDataTableAdapter(
+          //   // data
+          //   [
+          //     { id: 1, name: 'Name 1' },
+          //     { id: 2, name: 'Name 2' }
+          //   ],
+          //   []
+          // );
+
+          this.adfData = this.initDefaultSchemaColumns(res);
+          this.adfData.setSorting(new DataSorting('id', 'asc'));
+
 
           // let instanceList = res['instanceList'];
           // this.instanceList = instanceList;
@@ -145,6 +191,8 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
         console.log(err);
       }
     );
+
+
 
 
     // this.cowfishService.getDataList().subscribe(
@@ -229,7 +277,22 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
 
     const variables: ProcessInstanceVariable[] = [
       { name: 'id', value: row.id },
-      { name: 'table_name', value: this.currentTab }
+      { name: 'table_name', value: this.currentTab },
+      { name: 'nycdrs_id', value: row.nycdrsId },
+      { name: 'labnext_id', value: row.labnextId },
+      { name: 'scanner', value: row.scan },
+      { name: 'external_id', value: row.externalId },
+      { name: 'doctor_id', value: row.doctorId },
+      { name: 'patient', value: row.patient },
+      { name: 'sent_date', value: row.sentDate },
+      { name: 'requested_delivery_date', value: row.requestedDeliveryDate },
+      { name: 'owner', value: row.owner },
+      { name: 'taskDescription', value: row.taskDescription },
+      { name: 'status', value: row.status },
+      { name: 'group', value: row.group },
+      { name: 'action', value: row.action },
+      { name: 'flow', value: row.flow },
+      { name: 'instanceIdFromDB', value: row.instanceId }
     ];
 
     //Start Process
@@ -253,17 +316,20 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
           console.log('Task ID = ' + taskList[0].id);
           this.taskID = taskList[0].id;
           this.globalValues.currentTaskId = this.taskID;
+
+          //Route to Task Details Page
+          setTimeout(() => {
+            console.log('Starting navigation to TaskDetails');
+            this.router.navigateByUrl('taskdetails/' + this.appId + '/' + this.taskID);
+          }, 200);
+
         }, error => {
           console.log('Error: ', error);
         });
-    }, 5000);
+    }, 1000);
 
 
-    //Route to Task Details Page
-    setTimeout(() => {
-      console.log('Starting navigation to TaskDetails');
-      this.router.navigateByUrl('taskdetails/' + this.appId + '/' + this.taskID);
-    }, 5500);
+
   }
 
 
@@ -312,22 +378,23 @@ export class UserPortalComponent implements AfterViewInit, OnInit, OnDestroy {
   hoverIn(doctorId) {
     this.doctorName = "";
     this.doctorAddress = "";
-    let params = 'doctors/'+doctorId;
+    let params = 'doctors/' + doctorId;
     console.log(params);
 
 
     this.referenceDataService.getValues(params).subscribe(
       (res: ReferenceDataModel[]) => {
         // setTimeout(() => {
-          // console.dir(res);
-          this.doctorName = res['name'];
-          this.doctorAddress = res['address'];
+        // console.dir(res);
+        this.doctorName = res['name'];
+        this.doctorAddress = res['address'];
         // }, 100);
       },
       (err) => {
         // console.log(err);
       }
-    )};
+    )
+  };
 }
 
 
